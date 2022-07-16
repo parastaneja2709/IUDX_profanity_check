@@ -1,0 +1,226 @@
+from config import configrmq
+
+def connect():
+    connection=None
+    try:
+        params = configrmq()
+        print('Making a connection to rmq ...')
+        connection = pika.BlockingConnection(pika.ConnectionParameters(**params))
+        print('connection established to rmq')
+        channel = connection.channel()
+        
+        channel.exchange_declare(exchange="logs",exchange_type='fanout')
+
+        result = channel.queue_declare(queue='',exclusive=True)
+        queue_name = result.method.queue
+        channel.queue_bind(exchange='logs',queue=queue_name)
+        print(' [*] Waiting for logs')
+
+        def callback(ch,method,properties,body):
+            print(" [x] Received %r" %body)
+
+        channel.basic_consume(queue=queue_name,on_message_callback=callback, auto_ack=True)
+        channel.start_consuming()
+    except(Exception, psycopg2.DarabaseError) as error:
+        print(error)
+    finally:
+        if connection is not None:
+            connection.close()
+            print('Database connection terminated.')
+
+
+
+
+def update(id,comment_status):
+#connecting to ES cluster   
+ 
+host = ["database.iudx.io"]
+port = 24034
+auth = ("cat-user", "K?Qo2=+P703xh$Lk")
+ 
+client = OpenSearch(
+    hosts = host,
+    port = port,
+    http_auth = auth,
+    use_ssl = True,
+    verify_certs = True,
+)
+# Create an index with non-default settings.
+index_name = 'cat-rating'
+index_body = {
+  'ratings': {
+    'comment': {
+      'res': 4
+    }
+  }
+}
+ 
+response = client.indices.create(index_name, body=index_body)
+print('\nCreating index:')
+print('We get response:', response)
+
+
+
+
+
+# #es=Elasticsearch([{"host":"localhost","port":9200}])
+# es=Elasticsearch("http://localhost:9200")
+# print(es.ping())
+ 
+# index_name="cat-rating"
+
+
+# #create index if not already present
+# if es.indices.exists(index=index_name)==False:
+#     es.indices.create(index=index_name)
+#     print("INDEX_NAME:", index_name,"index created.")
+# else:
+#     es.indices.delete(index=index_name)
+#     print("Index already exists")
+
+# doc1={ "rating" : 4.4, "comment" : "good resource", "resourceID" : "iisc.ac.in/89a36273d77dac4cf38114fca1bbe64392547f86/rs.iudx.io/pune-env-flood", "userID" : "a709a897-c1df-4521-86fb-60d7ba6fb888", "status" : "pending" }
+# doc2={ "rating" : 2, "comment" : "It sucks", "resourceID" : "iisc.ac.in/89a36273d77dac4cf38114fca1bbe64392547f86/rs.iudx.io/pune-env-flood", "userID" : "b709a897-c1df-4521-86fb-60d7ba6fb888", "status" : "pending"}
+# doc3={ "rating" : 1.1, "comment" : "It makes no fucking sense", "resourceID" : "iisc.ac.in/89a36273d77dac4cf38114fca1bbe64392547f86/rs.iudx.io/pune-env-flood", "userID" : "c709a897-c1df-4521-86fb-60d7ba6fb888", "status" : "pending" }
+
+# es.index(index=index_name,document=doc1,id="1a")
+# es.index(index=index_name,document=doc2,id="2b")
+# es.index(index=index_name,document=doc3,id="2c")
+
+# # id="1a"
+# # doc={
+# #     "size":1,
+# #     "query": {
+# #         "bool":{
+# #             "must": [{
+# #                 "match_phrase": {
+# #                     "id": id
+# #                 }
+# #             }]
+# #         }
+# #     }
+# # }
+# doc_id="1a"
+# update_doc = es.get(index=index_name, id=doc_id)
+# print(update_doc['_source']['status'])
+# #update_doc['_source']['status']="aprooved"
+# es.indices.refresh(index=index_name)
+# print(update_doc['_source'])
+# #doc1=update_doc['_source']['status']
+# #res=es.update(index=index_name,id=doc_id,body=update_doc['_source'])
+# doc={
+#     "doc":{
+#         "status":"aprooved"
+#     }
+# }
+# es.update(index=index_name,id=doc_id, body=doc)
+# #es.update_by_query(index=index_name,)
+# es.indices.refresh(index=index_name)
+# update_doc2 = es.get(index=index_name, id=doc_id)
+# print(update_doc2['_source']['status'])
+# #print(update_doc['_source']['status'])
+
+ca_certs_path = '/full path to cluster-ca-certificate.pem'
+ 
+hosts = ["xxx.xxx.xxx.xxx", "xxx.xxx.xxx.xxx", "xxx.xxx.xxx.xxx"]
+port = 9200
+auth = ("icelasticsearch", "<Password>")
+ 
+client = OpenSearch(
+    hosts = hosts,
+    port = port,
+    http_auth = auth,
+    use_ssl = True,
+    verify_certs = True,
+    ca_certs = ca_certs_path
+)
+
+from config import configes
+
+def connect():
+    connection=None
+    try:
+        params = configes()
+        print('connecting to the postgreSQL database ...')
+        client = OpenSearch(**params)
+        print('connection established')
+
+
+
+#es=Elasticsearch([{"host":"localhost","port":9200}])
+    #es=Elasticsearch([{host="database.iudx.io","port":24034}], http_auth=("cat-user","K?Qo2=+P703xh$Lk"))
+
+
+
+
+
+
+
+
+from config import configrmq
+from email import message
+
+# def connect():
+#     connection=None
+#     try:
+#         params = configrmq()
+#         print('Making a connection to rmq ...')
+#         connection = pika.BlockingConnection(pika.ConnectionParameters(**params))
+#         print('connection established to rmq')
+#         channel = connection.channel()
+        
+#         channel.exchange_declare(exchange='logs', exchange_type='fanout')
+
+#         message = ' '.join(sys.argv[1:]) or "info: Helllo World!"
+
+#         channel.basic_publish(exchange='logs', routing_key='', body=message)
+#         print(" [x] Sent %r" % message)
+#         connection.close()
+#     except(Exception, ConnectionRefusedError) as error:
+#         print(error)
+#     finally:
+#         if connection is not None:
+#             connection.close()
+#             print('Database connection terminated.')
+
+
+
+
+
+
+from configparser import ConfigParser
+def configes(filename='elasticsearch.ini', section = 'elasticsearch'):
+    #create a parser
+    parser =ConfigParser()
+    #read config file
+    parser.read(filename)
+    #print(parser[section])
+    #print(parser.has_section(section))
+    db={}
+    if parser.has_section(section):
+        params=parser.items(section)
+        for param in params:
+            db[param[0]] = param[1]
+    else:
+        raise Exception("Section {0} is not found in the {1} file.".format(section,filename))
+    #print(db)
+    return db
+
+def configrmq(filename='rmq.ini', section = 'rabbitmq'):
+    #create a parser
+    parser =ConfigParser()
+    #read config file
+    parser.read(filename)
+    #print(parser[section])
+    #print(parser.has_section(section))
+    db={}
+    if parser.has_section(section):
+        params=parser.items(section)
+        for param in params:
+            db[param[0]] = param[1]
+    else:
+        raise Exception("Section {0} is not found in the {1} file.".format(section,filename))
+    #print(db)
+    return db
+
+
+    
