@@ -1,11 +1,9 @@
 
 from numpy import indices
-#from opensearchpy import OpenSearch
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 def update(index_name,doc_id,comment_status):
     #connecting to ES cluster   
-    #es = Elasticsearch(["database.iudx.io"], port=24034,connection_class=RequestsHttpConnection, http_auth=("cat-user","K?Qo2=+P703xh$Lk"),use_ssl=False,verify_certs=False)
     es=Elasticsearch("http://localhost:9200")
     
     if es.ping():
@@ -54,26 +52,3 @@ def update(index_name,doc_id,comment_status):
 
 #update("cat-rating","1a","pending")
 
-
-
-
-#connecting to ES cluster   
-
-# #es=Elasticsearch(["http://database.iudx.io:24034"], basic_auth=("cat-user","K?Qo2=+P703xh$Lk"))
-# # from elasticsearch import RequestsHttpConnection
-# #es = Elasticsearch(["database.iudx.io"], port=24034,connection_class=RequestsHttpConnection, http_auth=("cat-user","K?Qo2=+P703xh$Lk"),use_ssl=False,verify_certs=False)
-# es = Elasticsearch(["database.iudx.io:24034/elastic-cluster"], connection_class=RequestsHttpConnection, http_auth=("cat-user","K?Qo2=+P703xh$Lk"),use_ssl=False,verify_certs=False)
-# print(es.ping())
-# if es.ping():
-#     print("Connection to Elasticsearch cluster established")
-# else:
-#     print("Connection failed")
-
-# print(es.info())
-# #display all indices
-# # indices=es.indices.get_alias("*")
-# # for index in indices:
-# #     print(index)
-
-# index_name="cat-rating"
-# #print(es.indices.exists(index=index_name))
