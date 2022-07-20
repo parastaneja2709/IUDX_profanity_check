@@ -2,7 +2,6 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 index_name = "cat-rating"
 
 #connecting to ES cluster   
-#es = Elasticsearch(["database.iudx.io"], port=24034,connection_class=RequestsHttpConnection, http_auth=("cat-user","K?Qo2=+P703xh$Lk"),use_ssl=False,verify_certs=False)
 es=Elasticsearch("http://localhost:9200")
 if es.indices.exists(index=index_name)==False:
     es.indices.create(index=index_name)
