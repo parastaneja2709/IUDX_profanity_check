@@ -1,3 +1,3 @@
-# IUDX profanity check
+# Profanity check
 
 RMQ and ES integeration
