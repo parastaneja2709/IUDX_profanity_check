@@ -4,8 +4,6 @@ from verification import profanity_check
 def RabbitMq(es_index_name,queue_name):
     print('Making a connection to rmq ...')
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-    # credentials = pika.PlainCredentials('admin', '9pFo6bvZ69tpeKmdUejb')
-    # connection = pika.BlockingConnection(pika.ConnectionParameters('databroker.iudx.io',29042,'IUDX-INTERNAL',credentials))
     channel = connection.channel()
     print('connection established to rmq')
 
@@ -27,11 +25,4 @@ def RabbitMq(es_index_name,queue_name):
         channel.start_consuming()
     print('To exit press CTRL+C')
     connection.close()
-
-# queue_name = "catalogue-rating"
-# print('Making a connection to rmq ...') 
-# credentials = pika.PlainCredentials('admin', '9pFo6bvZ69tpeKmdUejb')
-# connection = pika.BlockingConnection(pika.ConnectionParameters('databroker.iudx.io',29042,'IUDX-INTERNAL',credentials))
-# channel = connection.channel()
-# print('connection established to rmq')
 
