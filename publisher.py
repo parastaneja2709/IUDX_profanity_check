@@ -2,8 +2,6 @@ import pika, json
 
 print('Making a connection to rmq ...')
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-#credentials = pika.PlainCredentials('admin', '9pFo6bvZ69tpeKmdUejb')
-#connection = pika.BlockingConnection(pika.ConnectionParameters('databroker.iudx.io',29042,'IUDX-INTERNAL',credentials))
 channel = connection.channel()
 print('connection established to rmq')
 
