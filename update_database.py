@@ -11,7 +11,6 @@ def update(index_name,doc_id,comment_status):
     else:
         print("Connection failed")
     
-    #index_name="cat-rating"
 
     #create index if not already present
     if es.indices.exists(index=index_name)==False:
@@ -50,5 +49,4 @@ def update(index_name,doc_id,comment_status):
     print(update_doc['_source'])
     print("Database Updated")
 
-#update("cat-rating","1a","pending")
 
